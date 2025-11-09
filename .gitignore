@@ -1,0 +1,66 @@
+# --------------------
+# Node / JavaScript
+# --------------------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+bun.lock
+/dist
+/build
+/out
+/.parcel-cache
+/.next
+/.expo
+/.expo-shared
+/.vscode
+
+# --------------------
+# React Native
+# --------------------
+ios/Pods/
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.keystore
+android/app/build/
+android/.gradle/
+*.iml
+
+# --------------------
+# Python
+# --------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+.env
+.venv/
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+
+# --------------------
+# FastAPI / ML backend
+# --------------------
+*.ipynb_checkpoints
+
+# --------------------
+# Docker
+# --------------------
+docker-compose.override.yml
+**/Dockerfile
+**/*.dockerignore
+*.log
+
+# --------------------
+# OS / Editor
+# --------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

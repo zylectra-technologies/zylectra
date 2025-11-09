@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Vehicle {
+  id              Int           @id @default(autoincrement())
+  vehicleType     String
+  licensePlate    String        @unique
+  status          VehicleStatus @default(IDLE)
+  batteryLevel    Int
+  latitude        Float
+  longitude       Float
+  nextStop        String?
+  temperature     Float
+  odometerReading Int
+
+  driver   Driver? @relation(fields: [driverId], references: [id])
+  driverId Int?    @unique
+
+  trips   Trip[]
+  fleet   Fleet? @relation(fields: [fleetId], references: [id])
+  fleetId Int?
+
+  createdAt DateTime @default(now())
+}
+
+model Driver {
+  id          Int    @id @default(autoincrement())
+  name        String
+  username    String  @unique
+  passwordHash String
+  contactInfo String
+
+  status DriverStatus @default(AVAILABLE)
+  trips  Trip[]
+
+  fleet   Fleet? @relation(fields: [fleetId], references: [id])
+  fleetId Int?
+
+  currentLocationLat  Float
+  currentLocationLong Float
+
+  currentTripId     Int?
+  lastStop          String?
+  lastStopUpdatedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  Vehicle   Vehicle[]
+}
+
+
+model Trip {
+  id            Int        @id @default(autoincrement())
+  vehicle       Vehicle    @relation(fields: [vehicleId], references: [id])
+  vehicleId     Int
+  driver        Driver     @relation(fields: [driverId], references: [id])
+  driverId      Int
+  route         Route?     @relation(fields: [routeId], references: [id])
+  routeId       Int?
+  startLocation String
+  endLocation   String
+  distance      Float
+  duration      Float
+  status        TripStatus @default(PLANNED)
+  startTime     DateTime?
+  endTime       DateTime?
+  createdAt     DateTime   @default(now())
+}
+
+enum VehicleStatus {
+  IDLE
+  CHARGING
+  EN_ROUTE
+}
+
+enum DriverStatus {
+  AVAILABLE
+  ON_DUTY
+  OFF_DUTY
+}
+
+enum TripStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Fleet {
+  id        Int          @id @default(autoincrement())
+  name      String
+  admins    FleetAdmin[]
+  vehicles  Vehicle[]
+  drivers   Driver[]
+  createdAt DateTime     @default(now())
+}
+
+model FleetAdmin {
+  id          Int      @id @default(autoincrement())
+  name        String
+  contactInfo String
+  fleet       Fleet    @relation(fields: [fleetId], references: [id])
+  fleetId     Int
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+  createdAt   DateTime @default(now())
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  passwordHash String
+  role         UserRole    @default(USER)
+  createdAt    DateTime    @default(now())
+  FleetAdmin   FleetAdmin?
+}
+
+model Route {
+  id        Int      @id @default(autoincrement())
+  name      String
+  stops     Json
+  distance  Float
+  createdAt DateTime @default(now())
+  trips     Trip[]
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}

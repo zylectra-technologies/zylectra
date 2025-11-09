@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  web:
+    build: ./apps/web
+    container_name: web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend-api
+    command: npm run dev
+
+  mobile:
+    build: ./apps/mobile
+    container_name: mobile
+    ports:
+      - "8081:8081" # Metro bundler
+    volumes:
+      - ./apps/mobile:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend-api
+    command: npx react-native start --host 0.0.0.0
+
+  backend-api:
+    build: ./services/backend-api
+    container_name: backend-api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./services/backend-api:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: bun run dev
+
+  ml-backend:
+    build: ./services/ml-backend
+    container_name: ml-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/ml-backend/src/ev_range_model:/app/ev_range_model
+      - ./services/ml-backend/src/ev_range_model/models:/app/ev_range_model/models
+      - ./services/ml-backend/src/ev_range_model/data:/app/ev_range_model/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: uvicorn ev_range_model.main:app --host 0.0.0.0 --port 8000 --reload
