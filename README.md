@@ -1,4 +1,15 @@
-# Zylectra Monorepo
+# Zylectra
+
+**Zylectra** is a **route optimization platform** designed for electric vehicle (EV) fleets. It features:
+
+- A **web dashboard** for fleet admins to visualize and manage vehicles.
+- **Optimal route calculation** between two locations with **EV charging stations** integrated along the route.
+- The ability for admins to **assign routes to drivers**.
+- A **mobile app** for drivers to view their assigned routes in real time.
+
+Zylectra helps fleets **reduce travel time, manage EV range efficiently, and streamline driver assignments** through an integrated web and mobile experience.
+
+---
 
 This repository contains the full-stack Zylectra application, including:
 
